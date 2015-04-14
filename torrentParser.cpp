@@ -223,6 +223,11 @@ bool DictNode::parser ( string & content )
 // following method is used the parser torrent file which is the combination 
 // of all the B encoding parsers (type: integer , string , list, dict ...)
 
+bool TorrentFile::encode ( const string & torrent_file_content , torrent_file_t &torrent_structure )
+{
+  return true ;
+}
+
 
 
 
