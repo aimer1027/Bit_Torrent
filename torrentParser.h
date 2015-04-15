@@ -149,9 +149,17 @@ class TorrentFile
 {
 	public :	
 		torrent_file_t torrent_file ;
+
 		static bool encode ( const string & torrent_file_content ,
 				torrent_file_t &torrent_structure ) ;
+
+// update date : 2015/4/15 by Aimer
+
+		static void  get_node_value ( IntegerNode *pIntegerNode , int64_t &integer_value ) ;
 	
+		static void get_node_value ( StringNode *pStringNode , string &string_value ) ;
+
+		static AnyNode *find_target_node ( map<StringNode *, AnyNode*> &hash_map , const string &key ) ; 	
 } ;
 
 #endif

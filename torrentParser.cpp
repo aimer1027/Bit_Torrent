@@ -220,6 +220,64 @@ bool DictNode::parser ( string & content )
 	return true ;
 }
 
+// update date : 2015/4/15 by Aimer
+void TorrentFile::get_node_value (StringNode *pStringNode, string &string_value) 
+{
+	if ( pStringNode == NULL )
+	{
+	  LOG(WARNING)<<"[warnning] can not get string type value , empty" ;
+	  string_value = "" ;
+	}
+	else
+	{
+	  string_value = pStringNode->_value ;
+	}
+}
+
+void TorrentFile::get_node_value ( IntegerNode *pIntegerNode , int64_t &integer_value )
+{
+	if ( pIntegerNode == NULL )
+	{
+	   LOG(WARNING)<<"[warnning] can not get integer type value , empty";
+	   integer_value = -1 ;
+	}
+	else
+	{
+	   integer_value = pIntegerNode->_value ;
+	}
+}
+
+AnyNode * TorrentFile::find_target_node ( map<StringNode*, AnyNode*>&hash_map , 
+		const string &key )
+{
+    for ( map<StringNode*,AnyNode*>::iterator it_map = hash_map.begin() ;
+		it_map != hash_map.end() ; it_map++ )
+    {
+	StringNode *pStringNode = dynamic_cast<StringNode*>(it_map->first) ;
+	if ( pStringNode == NULL )
+	{
+	  LOG(WARNING)<<"[warnning] hash map key is NULL ";
+	  return NULL ;
+	}
+	
+	if ( pStringNode->_value  == key )
+	   return it_map->second ; 
+    }
+
+   return NULL ;  // not find
+}
+
+
+
+
+
+
+
+
+
+
+
+
 // following method is used the parser torrent file which is the combination 
 // of all the B encoding parsers (type: integer , string , list, dict ...)
 
