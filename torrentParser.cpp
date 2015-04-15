@@ -283,6 +283,194 @@ AnyNode * TorrentFile::find_target_node ( map<StringNode*, AnyNode*>&hash_map ,
 
 bool TorrentFile::encode ( const string & torrent_file_content , torrent_file_t &torrent_structure )
 {
+  string file_string = torrent_file_content ;
+  DictNode *pFileDict = new DictNode () ;
+
+  pFileDict->parser ( file_string  ) ;
+  
+  // key word : "announce" ;  type: string 
+  get_node_value ( dynamic_cast<StringNode*>
+	(find_target_node( pFileDict->_value_map , "announce" )) , torrent_structure.announce ) ; 
+ 
+ // key word : "created by" ; type : string
+  get_node_value ( dynamic_cast<StringNode*>
+	(find_target_node(pFileDict->_value_map, "created by")) , torrent_structure.created_by) ;
+
+// key word : "creatation date" ; type :integer
+  get_node_value ( dynamic_cast<IntegerNode*>
+	( find_target_node( pFileDict->_value_map , "creation date")) , torrent_structure.creation_date ) ;
+ 
+// key word : "comment" ; type : string
+  get_node_value ( dynamic_cast<StringNode*>
+	(find_target_node( pFileDict->_value_map , "comment" ) ), torrent_structure.comment ) ;
+
+// key word : "encoding" ; type : string
+  get_node_value ( dynamic_cast<StringNode*>
+	(find_target_node (pFileDict->_value_map , "encoding" )), torrent_structure.encoding ) ;
+
+
+// key word : "announce-list" ;  type : list< contain element type : string >
+  AnyNode *pAnyNode_list = find_target_node ( pFileDict->_value_map , "announce-list" ) ;
+ 
+ if ( pAnyNode_list != NULL) // "announce-list" exists in .torrent file
+ {
+	ListNode *pAnnounceList = dynamic_cast<ListNode*>(pAnyNode_list) ;
+	
+	// traverse the list , extract string into --> torrent_strucutre.announce_list :(vector<string> type)
+	for ( vector<AnyNode*>::iterator it = pAnnounceList->_value_list.begin () ;
+				it != pAnnounceList->_value_list.end () ; it++ )
+	{
+		string string_announce ;
+	
+		get_node_value ( dynamic_cast<StringNode*>(*it) , string_announce ) ;
+		
+		torrent_structure.announce_list.push_back (string_announce) ;
+	}
+ } 
+ 
+ else
+ {
+	LOG(INFO)<<"[info] no key words : <announce-list> exists in torrent file"  ;
+ }
+ 
+ // key word : "info" ; type : dictionary 
+//  if single file mode , dictionary elements type : string
+//  if multi-file mode ,  dictionary elements type : string , list < element type : dictinary >
+//							dictionary element type : string<length>
+//								                  list <element type : string> 
+//
+ 
+{
+
+	// first get info|type : dict ;  from pFileDict
+	AnyNode *pAnyNode_dict = find_target_node ( pFileDict->_value_map , "info") ;
+	
+	if ( pAnyNode_dict != NULL ) // get "info" key word
+	{
+		DictNode *pInfoDict = dynamic_cast<DictNode*>(pAnyNode_dict) ;
+		
+		// get key word "pieces" from info -------->  info.pieces type : string
+	    	get_node_value ( dynamic_cast<StringNode*>
+			(find_target_node( pInfoDict->_value_map , "pieces" )) , torrent_structure.info.pieces ) ;
+		
+		// get key word "piece_length" from info --->  info.piece_length type : integer
+		get_node_value ( dynamic_cast<IntegerNode*>
+			(find_target_node(pInfoDict->_value_map , "piece length")), torrent_structure.info.piece_length ) ;
+		
+		// get info.files from info ------> info.files type: list
+		AnyNode *pAnyNode_info_list = find_target_node ( pInfoDict->_value_map , "files" ) ;
+		
+		if ( pAnyNode_info_list != NULL  )
+		{
+			LOG(INFO)<<"[info] multi-file mode" ;
+			torrent_structure.info.is_multi_file = true ;
+
+			
+			// files : list type exists , transfer it into ListType *
+			ListNode *pInfoFileList = dynamic_cast<ListNode*>( pAnyNode_info_list ) ;
+			
+			// get main dir from info , type : string , k-words "name"
+			string main_dir ;
+			
+			get_node_value ( dynamic_cast<StringNode*>
+				(find_target_node(pInfoDict->_value_map, "name")) , main_dir ) ;
+			
+			// traverse the list : info.files list with element in dict type
+			for ( vector<AnyNode*>::iterator it_dict = pInfoFileList->_value_list.begin() ;
+						it_dict != pInfoFileList->_value_list.end() ; it_dict++ )
+			{
+				DictNode *pDictNode = dynamic_cast<DictNode*>(*it_dict) ;
+				
+				if ( pDictNode != NULL)
+				{
+					// here on dict refers a sub file node 
+					// a sub file node contain 
+					// { integer type : file_length , list<string>: file sub-path  }
+			
+					file_t sub_file ;
+					sub_file.file_path += main_dir ; // first append the main dictionary into sub file
+					
+					// extract sub file length from pDictNode
+					get_node_value ( dynamic_cast<IntegerNode*>
+						(find_target_node( pDictNode->_value_map , "length"  ) ) , 
+										  sub_file.file_length ) ;
+					
+					// extract sub file path from pDictNode
+					// first find the path-list from pDictNode
+					AnyNode* pAnyNode_path_list = find_target_node ( pDictNode->_value_map , "path" ) ;
+					if ( pAnyNode_path_list != NULL  )
+					{
+						// second if it is not null , transfer it into List type
+						ListNode *pSubPathList = dynamic_cast<ListNode*>(pAnyNode_path_list) ;
+							
+						// third traverse the list's _value_list , extract each string 
+						// append them together into the absolute path of subfile
+						
+						// take care : the *it_sub_path is in type of StringNode *
+
+					for ( vector<AnyNode*>::iterator it_sub_path = pSubPathList->_value_list.begin() ;
+							it_sub_path != pSubPathList->_value_list.end () ; it_sub_path++ )
+					{
+						sub_file.file_path += "//" ; // first you should add seperator
+						
+						get_node_value ( dynamic_cast<StringNode*>(*it_sub_path  ), 
+												sub_file.file_path ) ;
+					} 
+					
+
+					}
+					else
+					{
+						LOG(WARNING)<<"[warning] oh ,no , sub file path is empty ";
+						return false ;
+					}
+
+					torrent_structure.info.file_list.push_back (sub_file) ;
+				}
+				else
+				{
+					LOG(WARNING)<<"[warnning] failed transfer AnyNode* into DictNode* ";
+					return false ;
+				}
+			}
+			
+			
+			
+		}
+		else
+		{
+			LOG(INFO)<<"[info] single file mode";
+			
+			torrent_structure.info.is_multi_file = false ;
+			
+			file_t single_file ;
+
+			// get info.files.file_length from info , type : integer , k-words "length"
+			get_node_value ( dynamic_cast<IntegerNode*>
+				(find_target_node(pInfoDict->_value_map , "length")) , single_file.file_length) ; 
+			
+			// get info.files.file_name from into , type : string , k-words "name"
+			get_node_value ( dynamic_cast<StringNode*>
+				(find_target_node(pInfoDict->_value_map , "name")) , single_file.file_path ) ;
+			
+			torrent_structure.info.file_list.push_back (single_file) ;
+			
+		}
+		
+
+	}
+	
+	else
+	{
+		LOG(WARNING)<<"[warnning] can not find key word :<info> in torrent file " ;
+		return false ;
+	}
+ }
+
+
+
+
+  delete pFileDict ;
   return true ;
 }
 

@@ -11,14 +11,14 @@ using namespace std ;
 
 typedef struct _file
 {
-	uint64_t file_length ;
+	int64_t  file_length ;
 	string   file_path ;
 } file_t;
 
 
 typedef struct _info
 {
-	uint64_t piece_length ; // length of each file block (B)
+	int64_t piece_length ; // length of each file block (B)
 	string   pieces   ;     // hash value length of 20*n
 	
 	bool     is_multi_file ; 
@@ -30,8 +30,8 @@ typedef struct _torrent_file
 	string   announce ;
 	vector<string> announce_list ;
 	string   comment ;
-	string   create_by ;
-	uint64_t create_date ;
+	string   created_by ;
+	int64_t creation_date ;
 	string   encoding ;
 	info_t   info ;
 } torrent_file_t ;

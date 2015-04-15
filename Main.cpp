@@ -25,6 +25,7 @@ int main ( int argc , char * argv[] )
    FLAGS_log_dir = "./log/" ;
   
 	
+
   cout << "input parser's type [i->integer] [s->string] [l->list] [d->dictionary]" << endl ;
   cin >> type ;
 
@@ -99,6 +100,18 @@ int main ( int argc , char * argv[] )
 	break ;
   }
 
+
+ // here we begin testing the TorrentFile::encode method 
+ // we need torrent-type file input string , and a null torrent_file_t variable
+ 
+ torrent_file_t torrent_structure ;
+ string         torrent_string;
+
+ cout << "input your torrent file content" << endl ;
+ cin >> torrent_string ;
+ 
+ TorrentFile::encode ( torrent_string, torrent_structure ) ;
+ 
  return 0 ;	
 }
 
