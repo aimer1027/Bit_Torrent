@@ -65,7 +65,7 @@ int Bitmap::get_bit_map_value ( int index )
 	return 0 ;
    }
   
-   return -1 ; // this branch could be reach 
+   return -1 ; // this branch could not be reach 
 }
 
 int Bitmap::set_bit_map_value ( int index, int set_value )
