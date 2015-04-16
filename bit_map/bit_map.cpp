@@ -5,7 +5,7 @@
 #include <glog/logging.h>
 
 #define set_value_one(value,index) value|=(1<<index)
-#define set_value_zero(value,index) value&=!(1<<pos)
+#define set_value_zero(value,index) value&=!(1<<index)
 
 
 using namespace std ;
