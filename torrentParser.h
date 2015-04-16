@@ -160,6 +160,24 @@ class TorrentFile
 		static void get_node_value ( StringNode *pStringNode , string &string_value ) ;
 
 		static AnyNode *find_target_node ( map<StringNode *, AnyNode*> &hash_map , const string &key ) ; 	
+
+		static void get_announce_list ( ListNode*pAnnounceList , torrent_file_t &torrent_structure  ) ;
+
+		static void get_info_dict ( DictNode*pInfoDict , torrent_file_t &torrent_structure ) ;
+		
+		// this method will be called by get_info_dict
+		static void get_info_common( DictNode*pInfoDict , torrent_file_t &torrent_structure ) ;
+		
+		// this method will be called by get_info_dict when single-file mode
+		static void get_info_single_mode ( DictNode* pInfoDict ,torrent_file_t &torrent_structure) ;
+		
+		// this method will be called by get_info_dict when multi-file mode
+		static void get_info_multi_mode ( DictNode* pInfoDict , torrent_file_t &torrent_structure ) ;
+
+
+		// this method will print out the messages stored inside in the torrent_file_t 
+		static void show_torrent_content ( torrent_file_t &torrent_structure) ;
+
 } ;
 
 #endif
