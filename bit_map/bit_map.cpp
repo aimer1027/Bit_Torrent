@@ -40,3 +40,30 @@ int Bitmap::set_all ( int set_value )
   return 0 ;
 } 
 
+
+int Bitmap::get_bit_map_value ( int index )
+{
+    int pos_byte = index / 8 ;
+    int pos_bit  = index % 8 ;
+
+    // first check whether index is leagal
+    // index increase by bit
+
+    if ( index < 0 || index > bit_length )
+    {
+	LOG(WARN)<<"[warning] index not illegal ";
+	return -1 ;
+    }
+  	
+    if ( (bit_field[pos_byte] >> pos_bit)&1) 
+    {
+	return 1 ;
+    } 
+	
+   else
+   {
+	return 0 ;
+   }
+  
+   return -1 ; // this branch could be reach 
+}
