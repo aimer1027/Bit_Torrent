@@ -1,0 +1,4 @@
+Log file created at: 2015/04/17 08:58:16
+Running on machine: anzhy.centOS
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0417 08:58:16.736557  8858 Main.cpp:15] [info] take it easy, test for glog
