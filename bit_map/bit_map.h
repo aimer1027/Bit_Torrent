@@ -37,6 +37,15 @@ public :
 	int set_bit_map_value ( int index , int set_value ) ;
 	int set_all ( int set_value ) ;
 	void print () ;
+
+// add by Aimer 2015/4/17
+	int restore_bitmap ( char *file_path) ;
+
+// add by Aimer 2015/4/17
+	int get_download_piece_num () ;
+
+// add by Aimer 2015/4/17
+	bool am_i_interested_in_peer ( Bitmap *peer ) ;
 	
 } ;
 
