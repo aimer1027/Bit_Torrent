@@ -4,8 +4,10 @@
 #include <vector>
 #include <glog/logging.h>
 
+#include "bit_map.h"
+
 #define set_value_one(value,index) value|=(1<<index)
-#define set_value_zero(value,index) value&=!(1<<pos)
+#define set_value_zero(value,index) value&=!(1<<index)
 
 
 using namespace std ;
@@ -51,7 +53,7 @@ int Bitmap::get_bit_map_value ( int index )
 
     if ( index < 0 || index > bit_length )
     {
-	LOG(WARN)<<"[warning] index not illegal ";
+	LOG(WARNING)<<"[warning] index not illegal ";
 	return -1 ;
     }
   	
@@ -70,6 +72,11 @@ int Bitmap::get_bit_map_value ( int index )
 
 int Bitmap::set_bit_map_value ( int index, int set_value )
 {
+   int pos_byte = index / 8 ;
+   int pos_bit  = index % 8 ;
+
+   printf ("pos_byte %d  pos_bit %d\n", pos_byte , pos_bit) ;
+
    // index legal testing , incr by bits 
 
    if ( index < 0 || index >bit_length  )
@@ -86,25 +93,29 @@ int Bitmap::set_bit_map_value ( int index, int set_value )
 	return -1 ;
    }
 
-   int pos_byte = index / 8 ;
-   int pos_bit  = index % 8 ;
-   
+   char value = bit_field[pos_byte] ;
    // now divide two branches by set_value = 1 or 0
    if ( set_value == 1)
    {
-	// call set_value_one 
-   	set_value_one(bit_field[pos_byte],pos_bit ) ;
 	
+	printf ("before %x \n", bit_field[pos_byte]) ;
+	// call set_value_one 
+   	set_value_one(value,pos_bit ) ;
+        bit_field[pos_byte] = value ;
+	printf ("after  %x \n",bit_field[pos_byte]) ;
    }
    
    if ( set_value == 0 ) 
    {
+	printf ("before %x \n", bit_field[pos_byte]) ;
 	// call set_value_zero
-  	set_value_zero(bit_field[pos_byte],pos_bit) ;
+  	set_value_zero(value,pos_bit) ;
+  	bit_field[pos_byte] = value ;
+	printf ("after %x \n", bit_field[pos_byte]) ;
    } 
 
   
-   return 1 ;
+   return 0 ;
 }
 
 
@@ -122,7 +133,10 @@ void Bitmap::print ()
 		else
 		   printf ("0") ;
 	} 
-
+	
+//	printf ("\n") ;
  }
+
+ printf ("\n") ;
 }
 
