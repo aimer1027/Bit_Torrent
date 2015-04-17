@@ -12,7 +12,7 @@
 #include "bit_map.h"
 
 #define set_value_one(value,index) value|=(1<<index)
-#define set_value_zero(value,index) value&=!(1<<index)
+#define set_value_zero(value,index) value&=~(1<<index)
 
 
 using namespace std ;
@@ -177,4 +177,39 @@ int Bitmap::restore_bitmap  ( char *file_path )
 	
 	close ( fd ) ;
 	return 0 ;
+}
+
+// add by Aimer 2015/4/17
+int Bitmap::get_download_piece_num ()
+{
+	unsigned char test_char [8] =
+	{
+		0x80, // 1000 0000
+		0x40, // 0100 0000
+		0x20, // 0010 0000
+		0x10, // 0001 0000
+		0x08, // 0000 1000
+		0x04, // 0000 0100
+		0x02, // 0000 0010
+		0x01, // 0000 0001  
+	} ;
+	
+	int download_piece_num = 0 ;
+	for ( int i = 0 ; i < (byte_length-1); i++ )
+	{
+		for ( int j = 0 ; j < 8 ; j++ )
+		{
+			if ( test_char[j] & bit_field[i] )
+				download_piece_num++ ;
+		}
+	}
+	
+	// the bit_length % 8 , mod remain bits count
+	int limit = (bit_length%8)?(bit_length%8):8 ;
+
+	for ( int j = 0 ; j < limit ; j++ )
+		if ( test_char[j] & bit_field[byte_length-1] )
+			download_piece_num ++ ;
+	
+	return download_piece_num ;
 }

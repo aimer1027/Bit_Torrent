@@ -20,7 +20,7 @@ int main ( int argc , char **argv )
     Bitmap bitMap(need_bit_length) ; 
  
 // test Bitmap's set all 
-    bitMap.set_all( 0 ) ;
+    bitMap.set_all( 1 ) ;
     
 // test Bitmap's print
     bitMap.print () ;
@@ -28,7 +28,7 @@ int main ( int argc , char **argv )
     int index = 5 ;
    
 // test Bitmap's set_bit_map_value
-    bitMap.set_bit_map_value ( index , 1) ; 
+    bitMap.set_bit_map_value ( index , 0 ) ; 
 
     bitMap.print () ;
 	
@@ -47,5 +47,11 @@ int main ( int argc , char **argv )
     bitMap.restore_bitmap ( file_path ) ; 
 
 
+// test Bitmap's get_download_piece_num 
+	int download_counter = 
+		bitMap.get_download_piece_num () ;
+// 1 should be the right result 
+   	printf ("download_piece_num : %d \n" , download_counter  ) ;
+	
     return 0 ;
 }
