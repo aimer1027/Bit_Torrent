@@ -213,3 +213,77 @@ int Bitmap::get_download_piece_num ()
 	
 	return download_piece_num ;
 }
+
+// add by Aimer 2015/4/17
+// this method is used to checkout whether "I" the current Bitmap object
+// is interested in the resource pieces (represented by bit in bit_field)
+// the peer the paramter (Bitmap*)  holds
+
+// if the peer holds the resources "I" don't have , return true 
+
+// else return false ,presents "I" have the same of more resource pieces
+// the peer take , so "I" am not interested in peer 
+
+
+bool Bitmap::am_i_interested_in_peer ( Bitmap *peer ) 
+{
+	unsigned char test_char[8] =
+	{0x80 , 0x40 , 0x20 , 0x10 , 0x08 , 0x04 , 0x02 , 0x01 } ;
+	unsigned char p_c , i_c ;
+
+	if ( peer == NULL )
+	{
+		LOG(WARNING)<<" peer is empty" ;
+	//	printf ("reason %d \n" , __LINE__ ) ;
+		return false ;
+	}	
+
+	if ( bit_field.size() == 0 || peer->bit_field.size() == 0 )
+	{
+		LOG(WARNING)<<"[warning] I and peer one or both of us has a empty bit map" ;
+	//	 printf ("reason %d \n" , __LINE__ ) ;
+		return false ;
+	}
+
+	if ((byte_length != peer->byte_length) || 
+			(bit_length != bit_length ))
+	{
+	    	LOG(WARNING)<<"[warning] I and peer valid bit length do not match" ;
+	//	 printf ("reason %d \n" , __LINE__ ) ;
+		return false ;
+	}
+
+
+	
+	for ( int i = 0 ; i < ( byte_length -1 ); i++ )
+	{
+	    for ( int j = 0 ; j < 8 ; j++ )
+	    {
+		i_c = ( bit_field[i] & test_char[j] ) ;
+		p_c = ( peer->bit_field[i] & test_char[j]);
+	
+		if ( i_c ==  0 && p_c >  0 )
+		{
+			// "I" do not have the resource piece peer has
+			// "I" am intrested in peer
+
+			return true ;
+		}
+	    } 
+	}
+	
+	
+	int limit = (bit_length%8)?(bit_length%8):8 ;
+
+	for ( int j = 0 ; j < limit ; j++ )
+	{
+		i_c = (bit_field[byte_length-1] & test_char[j] ) ;
+		p_c = (bit_field[byte_length-1] & test_char[j]) ;
+		
+		if ( i_c > 0  && p_c == 0 )
+			return true ;
+	}
+	
+	return false ;
+}
+
