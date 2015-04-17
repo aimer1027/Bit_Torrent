@@ -39,5 +39,13 @@ int main ( int argc , char **argv )
    
     printf (" get value = %d \n",result  ) ;
 
+// test Bitmap's restore_bitmap
+   char file_path [64] ;
+   
+   printf ("input file path to store bitmap content into file \n") ;
+   scanf ("%s" , file_path) ;
+    bitMap.restore_bitmap ( file_path ) ; 
+
+
     return 0 ;
 }

@@ -2,6 +2,11 @@
 #include <cstdlib>
 #include <iostream>
 #include <vector>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+
 #include <glog/logging.h>
 
 #include "bit_map.h"
@@ -140,3 +145,36 @@ void Bitmap::print ()
  printf ("\n") ;
 }
 
+
+// add by Aimer 2015/4/17
+int Bitmap::restore_bitmap  ( char *file_path )
+{
+	int 	fd ;
+	char 	file_name[64] ;
+	
+	if (file_path==NULL) 
+	{
+		LOG(WARNING)<<"[warning]  file_path is empty" ;
+		return -1 ;
+	}
+	
+	sprintf (file_name, "%s//bitmap%d.dat" , file_path , bit_length ) ;
+	fd = open ( file_name , O_RDWR | O_CREAT | O_TRUNC , 0666  ) ;
+	if ( fd < 0 )
+	{
+		LOG(WARNING)<<"[warning] failed to open file  %s "<< file_name ;
+		return -1 ;
+	}
+
+	for ( int i = 0 ; i < bit_field.size () ;i++ )
+	{
+		if ((write ( fd , &bit_field[i], 1 ) ) != 1 )
+		{
+			LOG(WARNING)<<"[warning] failed in writing into file ,error in %d byte "<< i ;
+			return -1 ;
+		}
+	}
+	
+	close ( fd ) ;
+	return 0 ;
+}
