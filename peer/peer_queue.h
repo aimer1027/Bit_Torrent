@@ -11,9 +11,8 @@ class Peer_Queue
 	Peer_Queue () ;
 	~Peer_QUeue () ;
         
-       int add_peer_node ( Peer &peer_node ) ;
-       int del_peer_node ( Peer &peer_node ) ;
-       void free_peer_node ( Peer &peer_node ) ;
-       void release_peer_queue_node () ;
+       int add_peer_node ( Peer *peer_node ) ;
+       int del_peer_node ( Peer *peer_node ) ;
+       void release_peer_queue_nodes () ;
        void print() ; 
 } ;
