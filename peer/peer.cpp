@@ -5,7 +5,6 @@
 
 #include "peer.h"
 
-vector<Peer> peer_queue ;
 
 Peer::Peer ()
 {
@@ -39,66 +38,26 @@ Peer::Peer ()
 
 }
 
-peer_node_t & Peer::add_peer_node ( vector<peer_node_t>& peer_nodes_queue )
+void Peer::release_peer_node ( )
 {
-  peer_nodes_list.push_back ( peer_node ) ;
-}
-
-int Peer::del_peer_node ( vector<peer_node_t>& peer_nodes_queue )
-{
-  int ret = -1 ;
-
-  for ( vector<peer_node_t>::iterator it = peer_node_queue.begin() ;
-		it ! peer_node_queue.end () ; it++ )
-  {
-	if ( !strcmp (it->id, peer_node.id))
-        {
-		peer_node_t &pDelNode = *it ;
-		
-		// remove target node from queue 
-		it = peer_node_queue.erase( it  ) ;
-		
-		// after remove node from queue , release its space
-		release_peer_node (pDelNode) ;
-		
-		ret = 0 ;
-		break ;
-	}
-  }
-
-  return ret ;
-
-}
-
-void Peer::release_peer_node ( peer_node_t &release_peer_node  )
-{
-  free ( release_peer_node.buff_in ) ;
-  free ( release_peer_node.msg_out ) ;
-  free ( release_peer_node.msg_buff_out ) ;
+  free ( peer_node.buff_in ) ;
+  free ( peer_node.msg_out ) ;
+  free ( peer_node.msg_buff_out ) ;
 	
 }
 
-void Peer::print_peer_node ( peer_node_t &p_node )
+void Peer::print ( )
 {
-  cout << "my peer id "<< p_node.id << endl ;
-  cout << "am_chocking "<< p_node.am_chocking << endl ;
-  cout << "am_interested " << p_node.am_interested < endl;
+  cout << "my peer id "<< peer_node.id << endl ;
+  cout << "am_chocking "<< peer_node.am_chocking << endl ;
+  cout << "am_interested " << peer_node.am_interested < endl;
   
-  cout << "peer_chocking" << p_node.peer_chocking << endl ;
-  cout << "peer_interested" << p_node.peer_interested << endl ;
+  cout << "peer_chocking" << peer_node.peer_chocking << endl ;
+  cout << "peer_interested" << peer_node.peer_interested << endl ;
 	
-  cout << "down_rate " << p_node.down_rate << endl ;
-  cout << "up_rate " << p_node.up_rate << endl ;
+  cout << "down_rate " << peer_node.down_rate << endl ;
+  cout << "up_rate " << peer_node.up_rate << endl ;
 
-}
-
-void Peer::print ( vector<peer_node_t>& peer_queue )
-{
-  for (vector<peer_node_t>::iterator it = peer_queue.begin() ;
-		it != peer_queue.end () ; it++  )
-  {
-		print_peer_node (*it) ;
-  }
 }
 
 
