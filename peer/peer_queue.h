@@ -1,15 +1,16 @@
-#incldue <time.h>
+#include <time.h>
 #include <vector>
+#include <stdint.h>
 
 #include "peer.h"
 
 class Peer_Queue
 {
-  private :
-	vector<Peer*> peer_queue ;
+  public :
+	std::vector < Peer* > peer_queue ;
   public :
 	Peer_Queue () ;
-	~Peer_QUeue () ;
+	~Peer_Queue () ;
         
        int add_peer_node ( Peer *peer_node ) ;
        int del_peer_node ( Peer *peer_node ) ;

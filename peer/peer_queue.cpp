@@ -1,10 +1,11 @@
 #include <time.h>
-#incldue <cstdio>
+#include <cstdio>
 #include <iostream>
 #include <vector>
 #include <cstring>
 
 #include "peer.h"
+#include "peer_queue.h"
 
 using namespace std ;
 
@@ -26,7 +27,7 @@ int Peer_Queue::add_peer_node ( Peer *peer_node  )
 // as the input peer's 
 // do not forget release the space of peer's buff_in , msg_out , msg_buff_out
 
-int Peer_queue::del_peer_node ( Peer *peer )
+int Peer_Queue::del_peer_node ( Peer *peer )
 {
    int ret = -1 ;
 
@@ -35,17 +36,19 @@ int Peer_queue::del_peer_node ( Peer *peer )
    {
 	if (!strcmp((*it)->peer_node.id , peer->peer_node.id))
 	{
-		vector<Peer*>::iterator it_tmp = it ;
-
-		it = peer_queue.erase(it) ;
+		cout << "success remove  peer id =  "<< (*it)->peer_node.port << " node " << endl ;
+		delete *it ;
 	
-		delete *it_tmp ; 
-		
+	        it = peer_queue.erase(it) ;
+	
 		ret = 0 ;
 		break ;		   
      }
    }
-  
+
+  if ( ret == -1 ) 
+    cout << "not find target peer id = " << peer->peer_node.port  <<  "node "<< endl ;
+ 
   return ret ;
 	
 }
@@ -64,4 +67,22 @@ void Peer_Queue::release_peer_queue_nodes ()
 
    // then clear the queue
   peer_queue.clear() ;
+}
+
+
+void Peer_Queue::print ()
+{
+   // add by Aimer 2015/4/19
+
+   if ( peer_queue.empty () )
+   {
+	cout << "empty queue , without any peer node in it "<<endl ;
+	return ;
+   }
+
+   for ( vector<Peer*>::iterator it = peer_queue.begin () ;
+		it != peer_queue.end () ; it++ )
+   {
+	(*it)->print () ;
+   }
 }

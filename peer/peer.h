@@ -4,12 +4,15 @@
 #include <string>
 #include <vector>
 #include <time.h>
+#include <stdint.h>
+#include <cstring>
+
 
 #include "../bit_map/bit_map.h"
 
 enum state
 {
-  INITIAL 0 ,
+  INITIAL = 0 ,
   HALF_SHAKED,
   HAND_SHAKED,
   SEND_BIT_FIELD,
@@ -47,7 +50,7 @@ typedef struct _peer_node
   int  buff_in_len ;
  
   char *msg_out ;
-  int   mst_out_len ;
+  int   msg_out_len ;
   
   char *msg_buff_out ;
   int   msg_buf_out_len ;
@@ -58,7 +61,7 @@ typedef struct _peer_node
   std::vector<request_piece_t> send_upload_request_queue ;
 
   unsigned int down_total ;
-  unsigned int up_totoal  ;
+  unsigned int up_total  ;
 
   time_t start_timestamp ;
   time_t recet_timestamp ;
@@ -119,7 +122,7 @@ typedef struct _peer_node
 
 class Peer
 {
- private :
+public :
 	peer_node_t peer_node ;
  
  public :
