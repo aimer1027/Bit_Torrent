@@ -125,16 +125,10 @@ class Peer
  public :
 	Peer () ;
 	~Peer () ;
-
-       int init () ;
-       int del_peer_node ( peer_node_t & del_peer_node ) ;
-       peer_node_t & add_peer_node () ;
-	
-       int cancel_recv_download_request ( peer_node_t &cancel_peer_node  ) ;		 
-       int cancel_send_upload_requested ( peer_node_t &cancel_peer_node  ) ;
-	
-       void release_peer_node ( peer_node_t &release_peer_node   ) ;
-       void print_peer_node ( peer_node_t );
+      
+       int cancel_recv_request_queue () ;
+       int cancel_send_request_queue () ;
+       void release_peer_node () ;
        void print () ;	
 } ;
 
