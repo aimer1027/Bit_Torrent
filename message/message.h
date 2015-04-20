@@ -104,7 +104,7 @@ class Piece_Msg : public  AnyMsg
   private :
 	int _index ;
 	int _begin ;
-	string &_block ;
+	string _block ;
 	
   public :
 	Piece_Msg ( int index , int begin , string& block )
