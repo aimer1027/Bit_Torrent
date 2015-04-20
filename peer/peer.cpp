@@ -10,34 +10,6 @@ using namespace std ;
 
 Peer::Peer ()
 {
-  peer_node.buff_in = (char*)malloc(MSG_LEN) ;
-  
-  if (peer_node.buff_in == NULL )
-  {
-	LOG(ERROR)<<"[error] failed to allocate space to peer_node.buff_in";
-  }
- 
-  peer_node.msg_out = (char*)malloc(MSG_LEN) ;
-  
-  if (peer_node.msg_out == NULL )
-  {
-	if ( peer_node.buff_in != NULL )
-	  free ( peer_node.buff_in ) ;
-	LOG(ERROR)<<"[error] failed to allocate space to peer_node.msg_out";
-  }
-	
-  peer_node.msg_buff_out = (char*)malloc (MSG_LEN) ;
- 
-  if ( peer_node.msg_buff_out == NULL )
-  {
-	if ( peer_node.buff_in != NULL )
-	  free( peer_node.buff_in ) ;
-	if ( peer_node.msg_out != NULL )
-	  free ( peer_node.msg_out ) ;
-	
-	LOG(ERROR)<<"[error] failed to allocate space to peer_node.msg_buff_out" ;
-  }
-
  
 }
 
@@ -46,19 +18,8 @@ Peer::~Peer ()
 	cancel_recv_request_queue () ;
 	cancel_send_request_queue () ;
  	
-	release_peer_node () ;
-
         cout << "Peer::~Peer() is called , peer node id = "<<peer_node.id << 
 		" recv and send requests are canceled " << endl ;
-}
-
-void Peer::release_peer_node ( )
-{
-  free ( peer_node.buff_in ) ;
-  free ( peer_node.msg_out ) ;
-  free ( peer_node.msg_buff_out ) ;
-
-  cout << "Peer::release_peer_node is called , every dynamic allocated space is free now " << endl ; 
 }
 
 void Peer::print ( )

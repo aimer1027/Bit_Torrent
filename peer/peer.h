@@ -46,15 +46,12 @@ typedef struct _peer_node
 	
   Bitmap *pBitmap ;
   
-  char *buff_in ;
-  int  buff_in_len ;
+  std::string buff_in ;
  
-  char *msg_out ;
-  int   msg_out_len ;
+  std::string msg_out ;
   
-  char *msg_buff_out ;
-  int   msg_buf_out_len ;
- 
+  std::string msg_buff_out ;
+  
  // download reqeustes received from others
   std::vector<request_piece_t> recv_download_request_queue ;
 //  uploaded requests send to others 
@@ -83,17 +80,7 @@ typedef struct _peer_node
 	port = 0 ;
 	memset(id , 0 , 21 ) ;
 	state = INITIAL ;
-	
-	buff_in = NULL ;
-	buff_in_len = 0 ;	
-
-	msg_out = NULL ;
-	msg_out_len = 0 ;
-	
-	msg_buff_out = NULL ;
-	msg_buf_out_len = 0 ;
-	
-	
+		
 	am_chocking = 1 ;
 	am_interested = 0 ;
 	peer_chocking = 1 ;
