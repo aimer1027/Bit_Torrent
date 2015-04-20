@@ -11,23 +11,23 @@ class AnyMsg
      static int char_to_int ( unsigned char c[4] ) ;
 
      virtual int create_msg ( Peer &peer ) ;
-     virtual int parse_msg  ( Peer &peer , unsigned char *msg , int msg_len );
+     virtual int parse_msg  ( Peer &peer , string& msg );
 } ;
 
 class Hand_Shake_Msg : public AnyMsg 
 {
   private :
-	char * _info_hash ;
-	char * _peer_id ;
+	string _info_hash ;
+	string  _peer_id ;
   public :
-	Hand_Shake_Msg ( char *info_hash , char *peer_id )
+	Hand_Shake_Msg ( string &info_hash , string &peer_id )
 	{
 		_info_hash = info_hash ;
 		_peer_id   = peer_id  ;
 	}
 	
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int parse_msg  ( Peer &peer , unsigned char *msg , int msg_len ) ;
+	virtual int parse_msg  ( Peer &peer , string& msg ) ;
     
 } ;
 
@@ -35,7 +35,7 @@ class Keep_Alive_Msg : public AnyMsg
 {
   public :
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int parse_msg  ( Peer &peer , unsigned char *msg , int msg_len ) ;
+	virtual int parse_msg  ( Peer &peer , string& msg ) ;
 } ;
 
 class Chock_Interested_Msg : public AnyMsg 
@@ -49,7 +49,7 @@ class Chock_Interested_Msg : public AnyMsg
 		_type = type ;
         }
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int parse_msg  ( Peer &peer , unsigned char*msg , int msg_len ) ;
+	virtual int parse_msg  ( Peer &peer , string& msg  ) ;
 } ;
 
 
@@ -64,23 +64,21 @@ class Have_Msg : public AnyMsg
 		_index = index ;
 	}
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int parse_msg  ( Peer &peer , unsigned char *msg , int msg_len) ;
+	virtual int parse_msg  ( Peer &peer , string& msg) ;
 } ;
 
 class Bit_Field_Msg : public AnyMsg 
 {
  private:
-	char *_bitfield ;
-	int   _bitfield_len ;
+	string _bitfield ;
  public :
-	Bit_Field_Msg ( char *bitfield , int bitfield_len )
+	Bit_Field_Msg ( string& bitfield )
 	{
 		_bitfield = bitfield ;
-		_bitfield_len = bitfield_len ;
         }
 	
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int parse_msg  ( Peer &peer , unsigned char *msg , int msg_len ) ;
+	virtual int parse_msg  ( Peer &peer , string& msg ) ;
 } ;
 
 class Request_Msg : public AnyMsg 
@@ -88,19 +86,17 @@ class Request_Msg : public AnyMsg
  private :
 	int _index ;
 	int _begin ;
-	char *_block ;
-	int _block_len ;
+	string _block ;
  public :
-	Request_Msg ( int index , int begin , char *block , int block_len )
+	Request_Msg ( int index , int begin , string &block )
 	{
 		_index = index ;
 		_begin = begin ;
 		_block = block ;
-		_block_len = block_len ;
 	}
 	
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int parse_msg  ( Peer &peer , unsigned char *msg , int msg_len ) ;
+	virtual int parse_msg  ( Peer &peer , string& msg ) ;
 } ;
 
 class Piece_Msg : public  AnyMsg 
@@ -108,20 +104,18 @@ class Piece_Msg : public  AnyMsg
   private :
 	int _index ;
 	int _begin ;
-	char *_block ;
-	int _block_len ;
+	string &_block ;
 	
   public :
-	Piece_Msg ( int index , int begin , char *block , int block_len )
+	Piece_Msg ( int index , int begin , string& block )
 	{
 		_index = index ;
 		_begin = begin ;
 		_block = block ;
-		_block_len = block_len ;
 	}
 	
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int parse_msg  ( Peer &peer , unsigned char *msg , int msg_len ) ; 
+	virtual int parse_msg  ( Peer &peer , string &msg ) ; 
 } ;
 
 class Cancel_Msg : public AnyMsg 
@@ -139,7 +133,7 @@ class Cancel_Msg : public AnyMsg
 	}
 
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int parse_msg  ( Peer &peer , unsigned char *msg , int msg_len );
+	virtual int parse_msg  ( Peer &peer , string&  msg );
 } ;
 
 class Port_Msg : public AnyMsg
@@ -153,7 +147,7 @@ class Port_Msg : public AnyMsg
 	} 
 	
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int parse_msg  ( Peer &peer , unsigned char *msg , int msg_len ) ;
+	virtual int parse_msg  ( Peer &peer , string& msg ) ;
 } ;
 
 #endif // message.h
