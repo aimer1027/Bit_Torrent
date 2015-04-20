@@ -10,32 +10,30 @@ class AnyMsg
      static int int_to_char( int i , unsigned char c[4]);
      static int char_to_int ( unsigned char c[4] ) ;
 
-     virtual int create_msg ( Peer &peer ) ;
-     virtual int process_msg  ( Peer &peer , string& msg );
+     virtual int create_msg ( Peer &peer ) = 0 ;
 } ;
 
 class Hand_Shake_Msg : public AnyMsg 
 {
   private :
-	string _info_hash ;
-	string  _peer_id ;
+	std::string _info_hash ;
+	std::string  _peer_id ;
   public :
-	Hand_Shake_Msg ( string &info_hash , string &peer_id )
+	Hand_Shake_Msg ( std::string &info_hash , std::string &peer_id )
 	{
 		_info_hash = info_hash ;
 		_peer_id   = peer_id  ;
 	}
 	
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int process_msg  ( Peer &peer , string& msg ) ;
-    
+   
 } ;
 
 class Keep_Alive_Msg : public AnyMsg
 {
   public :
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int process_msg  ( Peer &peer , string& msg ) ;
+	virtual int process_msg  ( Peer &peer , std::string& msg ) ;
 } ;
 
 class Chock_Interested_Msg : public AnyMsg 
@@ -49,7 +47,7 @@ class Chock_Interested_Msg : public AnyMsg
 		_type = type ;
         }
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int process_msg  ( Peer &peer , string& msg  ) ;
+	virtual int process_msg  ( Peer &peer , std::string& msg  ) ;
 } ;
 
 
@@ -64,21 +62,21 @@ class Have_Msg : public AnyMsg
 		_index = index ;
 	}
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int process_msg  ( Peer &peer , string& msg) ;
+	virtual int process_msg  ( Peer &peer , std::string& msg) ;
 } ;
 
 class Bit_Field_Msg : public AnyMsg 
 {
  private:
-	string _bitfield ;
+	std::string _bitfield ;
  public :
-	Bit_Field_Msg ( string& bitfield )
+	Bit_Field_Msg ( std::string& bitfield )
 	{
 		_bitfield = bitfield ;
         }
 	
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int process_msg  ( Peer &peer , string& msg ) ;
+	virtual int process_msg  ( Peer &peer , std::string& msg ) ;
 } ;
 
 class Request_Msg : public AnyMsg 
@@ -86,9 +84,9 @@ class Request_Msg : public AnyMsg
  private :
 	int _index ;
 	int _begin ;
-	string _block ;
+	std::string _block ;
  public :
-	Request_Msg ( int index , int begin , string &block )
+	Request_Msg ( int index , int begin , std::string &block )
 	{
 		_index = index ;
 		_begin = begin ;
@@ -96,7 +94,7 @@ class Request_Msg : public AnyMsg
 	}
 	
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int process_msg  ( Peer &peer , string& msg ) ;
+	virtual int process_msg  ( Peer &peer , std::string& msg ) ;
 } ;
 
 class Piece_Msg : public  AnyMsg 
@@ -104,10 +102,10 @@ class Piece_Msg : public  AnyMsg
   private :
 	int _index ;
 	int _begin ;
-	string _block ;
+	std::string _block ;
 	
   public :
-	Piece_Msg ( int index , int begin , string& block )
+	Piece_Msg ( int index , int begin , std::string& block )
 	{
 		_index = index ;
 		_begin = begin ;
@@ -115,7 +113,7 @@ class Piece_Msg : public  AnyMsg
 	}
 	
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int process_msg  ( Peer &peer , string &msg ) ; 
+	virtual int process_msg  ( Peer &peer , std::string &msg ) ; 
 } ;
 
 class Cancel_Msg : public AnyMsg 
@@ -133,7 +131,7 @@ class Cancel_Msg : public AnyMsg
 	}
 
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int process_msg  ( Peer &peer , string&  msg );
+	virtual int process_msg  ( Peer &peer , std::string&  msg );
 } ;
 
 class Port_Msg : public AnyMsg
@@ -147,7 +145,7 @@ class Port_Msg : public AnyMsg
 	} 
 	
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int process_msg  ( Peer &peer , string& msg ) ;
+	virtual int process_msg  ( Peer &peer , std::string& msg ) ;
 } ;
 
 #endif // message.h

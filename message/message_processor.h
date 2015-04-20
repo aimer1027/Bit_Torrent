@@ -12,15 +12,27 @@ class Any_Msg_Processor
      std::string info_hash ;
      std::string peer_id   ;
      AnyMsg *pAnyMsg ;
-  public :
 
-     virtual int process_msg (Peer &peer , string &msg ) ;
+  public :
+     Any_Msg_Processor (  ) 
+     {
+		pAnyMsg = NULL ;
+     }
+   
+     virtual int process_msg (Peer &peer , std::string &msg ) = 0 ;
 } ;
+
 
 class Hand_Shake_Msg_Processor : public Any_Msg_Processor 
 {
   public :
-	virtual int process_msg ( Peer &peer , string &msg ) ;
+	Hand_Shake_Msg_Processor ( std::string &info__hash , std::string &peer__id )
+    	{
+		info_hash = info__hash ;
+		peer_id   = peer__id ;
+        }
+
+	virtual int process_msg ( Peer &peer , std::string &msg ) ;
 } ;
 
 
