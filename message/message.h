@@ -11,7 +11,7 @@ class AnyMsg
      static int char_to_int ( unsigned char c[4] ) ;
 
      virtual int create_msg ( Peer &peer ) ;
-     virtual int parse_msg  ( Peer &peer , string& msg );
+     virtual int process_msg  ( Peer &peer , string& msg );
 } ;
 
 class Hand_Shake_Msg : public AnyMsg 
@@ -27,7 +27,7 @@ class Hand_Shake_Msg : public AnyMsg
 	}
 	
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int parse_msg  ( Peer &peer , string& msg ) ;
+	virtual int process_msg  ( Peer &peer , string& msg ) ;
     
 } ;
 
@@ -35,7 +35,7 @@ class Keep_Alive_Msg : public AnyMsg
 {
   public :
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int parse_msg  ( Peer &peer , string& msg ) ;
+	virtual int process_msg  ( Peer &peer , string& msg ) ;
 } ;
 
 class Chock_Interested_Msg : public AnyMsg 
@@ -49,7 +49,7 @@ class Chock_Interested_Msg : public AnyMsg
 		_type = type ;
         }
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int parse_msg  ( Peer &peer , string& msg  ) ;
+	virtual int process_msg  ( Peer &peer , string& msg  ) ;
 } ;
 
 
@@ -64,7 +64,7 @@ class Have_Msg : public AnyMsg
 		_index = index ;
 	}
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int parse_msg  ( Peer &peer , string& msg) ;
+	virtual int process_msg  ( Peer &peer , string& msg) ;
 } ;
 
 class Bit_Field_Msg : public AnyMsg 
@@ -78,7 +78,7 @@ class Bit_Field_Msg : public AnyMsg
         }
 	
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int parse_msg  ( Peer &peer , string& msg ) ;
+	virtual int process_msg  ( Peer &peer , string& msg ) ;
 } ;
 
 class Request_Msg : public AnyMsg 
@@ -96,7 +96,7 @@ class Request_Msg : public AnyMsg
 	}
 	
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int parse_msg  ( Peer &peer , string& msg ) ;
+	virtual int process_msg  ( Peer &peer , string& msg ) ;
 } ;
 
 class Piece_Msg : public  AnyMsg 
@@ -104,7 +104,7 @@ class Piece_Msg : public  AnyMsg
   private :
 	int _index ;
 	int _begin ;
-	string &_block ;
+	string _block ;
 	
   public :
 	Piece_Msg ( int index , int begin , string& block )
@@ -115,7 +115,7 @@ class Piece_Msg : public  AnyMsg
 	}
 	
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int parse_msg  ( Peer &peer , string &msg ) ; 
+	virtual int process_msg  ( Peer &peer , string &msg ) ; 
 } ;
 
 class Cancel_Msg : public AnyMsg 
@@ -133,7 +133,7 @@ class Cancel_Msg : public AnyMsg
 	}
 
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int parse_msg  ( Peer &peer , string&  msg );
+	virtual int process_msg  ( Peer &peer , string&  msg );
 } ;
 
 class Port_Msg : public AnyMsg
@@ -147,7 +147,7 @@ class Port_Msg : public AnyMsg
 	} 
 	
 	virtual int create_msg ( Peer &peer ) ;
-	virtual int parse_msg  ( Peer &peer , string& msg ) ;
+	virtual int process_msg  ( Peer &peer , string& msg ) ;
 } ;
 
 #endif // message.h
