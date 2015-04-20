@@ -7,6 +7,10 @@
 
 using namespace std ;
 
+string info_hash="32167321673216732167" ;
+string peer_id ;
+
+
 /*
   method AnyMsg::int_to_char 
   is used to transfer integer value decimal
@@ -46,7 +50,7 @@ int Hand_Shake_Msg::create_msg  ( Peer &peer )
 
  peer.peer_node.msg_out.append (1 , c_num ) ;
  peer.peer_node.msg_out.append ( keyword, 0  , keyword.size());
- peer.peer_node.msg_out.append (1,  c ) ;
+ peer.peer_node.msg_out.append ( 8,  c ) ;
 
  peer.peer_node.msg_out.append ( _info_hash, 0 , _info_hash.size() ) ;
  peer.peer_node.msg_out.append ( _peer_id , 0 , _peer_id.size() );
@@ -55,17 +59,21 @@ int Hand_Shake_Msg::create_msg  ( Peer &peer )
 	
 }
 
-int Hand_Shake::parse_msg ( Peer &peer , string & msg )
-{
-  if ( peer == NULL || msg == NULL )
+
+int Hand_Shake_Msg::process_msg ( Peer &peer , string & msg )
+{ 
+  AnyMsg *pAnyMsg = NULL ;
+
+  if (  msg.empty()  )
   {
 	// LOG warn...
 	return -1 ;
   }
 	
-  if ( memcmp ( info_hash.c_str() , (msg.substr(28,20)).c_str  ,20 ) != 0 )
+  if ( memcmp ( info_hash.c_str() , (msg.substr(28,20)).c_str()  ,20 ) != 0 )
   {
-	peer.state = CLOSING ;
+        cout << "info_hash not equal" << endl ;
+	peer.peer_node.state = CLOSING ;
 	// discard_send_buffer (peer) ;
 	// clear_btcache_before_peer_close( peer ) ;
 	// close (peer.socket) ;
@@ -76,16 +84,26 @@ int Hand_Shake::parse_msg ( Peer &peer , string & msg )
  }
 
  // copy buff's id info into peer's id 
- peer.id.assign( msg, 48, 20  ) ;
+
+ strcpy(  peer.peer_node.id , msg.substr( 48 , 20 ).c_str() ) ;
  
- peer.id[20] ='\0' ;
+ peer.peer_node.id[20] ='\0' ;
 	
- if ( peer.state == INITIAL )
+ if ( peer.peer_node.state == INITIAL )
  {
-     peer.state = HAND_SHAKED ;
-     create_msg ( ) ;
+     peer.peer_node.state = HAND_SHAKED ;
+     
+     pAnyMsg = new Hand_Shake_Msg ( info_hash, peer_id) ;    
+ 
+     pAnyMsg->create_msg ( peer ) ;
  }
 
+ if ( peer.peer_node.state == HALF_SHAKED )
+   peer.peer_node.state = HAND_SHAKED ;
+ 
+   peer.peer_node.start_timestamp = time(NULL) ;
+   
+   return 0 ;
 }
 
 
