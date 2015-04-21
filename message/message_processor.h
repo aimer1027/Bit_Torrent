@@ -36,5 +36,50 @@ class Hand_Shake_Msg_Processor : public Any_Msg_Processor
 } ;
 
 
+class Keep_Alive_Msg_Processor : public Any_Msg_Processor
+{
+  public :
+	virtual int process_msg ( Peer &peer , std::string &msg ) ;
+} ;
+
+
+class Have_Msg_Processor : public Any_Msg_Processor
+{
+  public :
+       virtual int process_msg ( Peer &peer , std::string &msg ) ;
+} ;
+
+class Bit_Field_Msg_Processor : public Any_Msg_Processor
+{
+  public :
+	virtual int process_msg ( Peer &peer , std::string &msg ) ;
+} ;
+
+
+class Request_Msg_Processor : public Any_Msg_Processor
+{
+   public :
+	virtual int process_msg ( Peer &peer , std::string &msg ) ;
+} ;
+
+class Piece_Msg_Processor : public Any_Msg_Processor
+{
+   public :
+	virtual int process_msg ( Peer &peer , std::string &msg ) ;
+} ;
+
+class Cancel_Msg_Processor : public Any_Msg_Processor
+{
+   public :
+	virtual int process_msg ( Peer &peer , std::string &msg ) ;
+} ;
+
+
+class Port_Msg_Processor : public Any_Msg_Processor
+{
+   public :
+	virtual int process_msg ( Peer &peer , std::string &msg ) ;
+} ;
+
 
 #endif // message_processor.h
