@@ -4,6 +4,12 @@
 #include <cstring>
 #include "../peer/peer.h"
 
+
+/**
+ definition of this  class is used as the based class 
+ for all kinds of message class definitions
+
+*/
 class AnyMsg
 {
   public :
@@ -12,6 +18,11 @@ class AnyMsg
 
      virtual int create_msg ( Peer &peer ) = 0 ;
 } ;
+
+/**
+class of Hand Shake Message 
+
+*/
 
 class Hand_Shake_Msg : public AnyMsg 
 {
@@ -28,6 +39,11 @@ class Hand_Shake_Msg : public AnyMsg
 	virtual int create_msg ( Peer &peer ) ;
    
 } ;
+
+/**
+ class of Hearbeats Message , only creates messages with header
+ sends Heartbeats just tell peers , I the sender still alive
+*/
 
 class Keep_Alive_Msg : public AnyMsg
 {

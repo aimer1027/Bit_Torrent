@@ -5,7 +5,7 @@
 
 class Bitmap
 {
-private:
+public :
 	std::vector<char> bit_field ;
 	int byte_length ;
 	int bit_length ;

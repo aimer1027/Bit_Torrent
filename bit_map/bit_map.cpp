@@ -24,7 +24,7 @@ int Bitmap::set_all ( int set_value )
   // first , we check set_value : this should be either 0 or 1
   if ( set_value != 1 && set_value != 0  )
   {
-	LOG(WARNING)<<"[warning] set value should be 0 or 1";
+	//LOG(WARNING)<<"[warning] set value should be 0 or 1";
 	return -1 ;
   }
   
@@ -58,7 +58,7 @@ int Bitmap::get_bit_map_value ( int index )
 
     if ( index < 0 || index > bit_length )
     {
-	LOG(WARNING)<<"[warning] index not illegal ";
+//	LOG(WARNING)<<"[warning] index not illegal ";
 	return -1 ;
     }
   	
@@ -86,7 +86,7 @@ int Bitmap::set_bit_map_value ( int index, int set_value )
 
    if ( index < 0 || index >bit_length  )
    {
-	LOG(WARNING)<<"[warning] index illegal range";
+//	LOG(WARNING)<<"[warning] index illegal range";
 	return -1 ;
    } 
 
@@ -94,7 +94,7 @@ int Bitmap::set_bit_map_value ( int index, int set_value )
    
    if ( set_value != 0 && set_value != 1 )
    {
-	LOG(WARNING)<<"[warning] input set_value error ";
+//	LOG(WARNING)<<"[warning] input set_value error ";
 	return -1 ;
    }
 
@@ -154,7 +154,7 @@ int Bitmap::restore_bitmap  ( char *file_path )
 	
 	if (file_path==NULL) 
 	{
-		LOG(WARNING)<<"[warning]  file_path is empty" ;
+//		LOG(WARNING)<<"[warning]  file_path is empty" ;
 		return -1 ;
 	}
 	
@@ -162,7 +162,7 @@ int Bitmap::restore_bitmap  ( char *file_path )
 	fd = open ( file_name , O_RDWR | O_CREAT | O_TRUNC , 0666  ) ;
 	if ( fd < 0 )
 	{
-		LOG(WARNING)<<"[warning] failed to open file  %s "<< file_name ;
+//		LOG(WARNING)<<"[warning] failed to open file  %s "<< file_name ;
 		return -1 ;
 	}
 
@@ -170,7 +170,7 @@ int Bitmap::restore_bitmap  ( char *file_path )
 	{
 		if ((write ( fd , &bit_field[i], 1 ) ) != 1 )
 		{
-			LOG(WARNING)<<"[warning] failed in writing into file ,error in %d byte "<< i ;
+//			LOG(WARNING)<<"[warning] failed in writing into file ,error in %d byte "<< i ;
 			return -1 ;
 		}
 	}
@@ -233,14 +233,14 @@ bool Bitmap::am_i_interested_in_peer ( Bitmap *peer )
 
 	if ( peer == NULL )
 	{
-		LOG(WARNING)<<" peer is empty" ;
+//		LOG(WARNING)<<" peer is empty" ;
 	//	printf ("reason %d \n" , __LINE__ ) ;
 		return false ;
 	}	
 
 	if ( bit_field.size() == 0 || peer->bit_field.size() == 0 )
 	{
-		LOG(WARNING)<<"[warning] I and peer one or both of us has a empty bit map" ;
+//		LOG(WARNING)<<"[warning] I and peer one or both of us has a empty bit map" ;
 	//	 printf ("reason %d \n" , __LINE__ ) ;
 		return false ;
 	}
@@ -248,7 +248,7 @@ bool Bitmap::am_i_interested_in_peer ( Bitmap *peer )
 	if ((byte_length != peer->byte_length) || 
 			(bit_length != bit_length ))
 	{
-	    	LOG(WARNING)<<"[warning] I and peer valid bit length do not match" ;
+//	    	LOG(WARNING)<<"[warning] I and peer valid bit length do not match" ;
 	//	 printf ("reason %d \n" , __LINE__ ) ;
 		return false ;
 	}

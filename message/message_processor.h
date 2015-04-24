@@ -2,8 +2,11 @@
 #define MESSAGE_PROCESSOR_H
 
 #include <cstring>
+#include <cmath>
+#include <cstdlib>
 
 #include "../peer/peer.h"
+#include "../bit_map/bit_map.h"
 #include "message.h"
 
 class Any_Msg_Processor
@@ -12,6 +15,7 @@ class Any_Msg_Processor
      std::string info_hash ;
      std::string peer_id   ;
      AnyMsg *pAnyMsg ;
+     Bitmap *_bitmap ;
 
   public :
      Any_Msg_Processor (  ) 
@@ -52,6 +56,7 @@ class Have_Msg_Processor : public Any_Msg_Processor
 class Bit_Field_Msg_Processor : public Any_Msg_Processor
 {
   public :
+        Bit_Field_Msg_Processor ( Bitmap &bitmap );
 	virtual int process_msg ( Peer &peer , std::string &msg ) ;
 } ;
 
