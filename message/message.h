@@ -30,40 +30,35 @@ typedef struct keep_alive_msg
   head_t header ;
 } keep_alive_msg_t ;
 
-class MessageOperator
-{
-  public :
-	int getMessageType       ( char *pBuffer ) ;
-	virtual int buildMessage ( char **ppBuffer , bson::BSONObj *obj) = 0 ;
-	virtual int parseMessage ( char *pBuffer , bson::BSONObj &msgData) = 0 ;
-
-} ;
 
 
-class HandShakeMsgOpt : MessageOperator
+class HandShakeMsgOpt 
 {
   private :
 	hand_shake_msg_t *pMessage ;
+	string hash_info ;
+	string peer_id ;
   public :
-	virtual int buildMessage ( char **ppBuffer ,int *pBufferSize ,
-							bson::BSONObj *obj ) ;
-	virtual int parseMessage ( char *pBuffer , 
-				bson::BSONObj &msgData ) ;
+
+ int buildMessage ( char **ppBuffer ,int *pBufferSize ,	bson::BSONObj *obj ) ;
+ int parseMessage ( char *pBuffer ,  bson::BSONObj &msgData ) ;
+
+ ~HandShakeMsgOpt ()   {}
 } ;
 
-
-class KeepAliveMsgOpt : MessageOperator
+/*
+class KeepAliveMsgOpt 
 {
    private :
 	keep_alive_msg_t *pMessage ;
   
-   public :
-	virtual int buildMessage ( char **ppBuffer , int *pBufferSize ,
-				bson::BSONObj *obj ) ;
-	virtual int parseMessage ( char *pBuffer ,
-				bson::BSONObj &msgData ) ;
-} ;
+ public :
+ int buildMessage ( char **ppBuffer , int *pBufferSize , bson::BSONObj *obj ) ;
+ int parseMessage ( char *pBuffer ,bson::BSONObj &msgData ) ;
 
+ ~KeepAliveMsgOpt () {}
+} ;
+*/
 
 
 #endif // message

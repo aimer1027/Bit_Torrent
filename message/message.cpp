@@ -8,6 +8,7 @@
 using namespace std ;
 using namespace bson ;
 
+/*
 int MessageOperator::getMessageType ( char *pBuffer )
 {
   head_t *pHeader = (head_t*)pBuffer ;
@@ -17,7 +18,7 @@ int MessageOperator::getMessageType ( char *pBuffer )
   return type ;
 }
 
-
+*/
 
 int HandShakeMsgOpt::buildMessage (char **ppBuffer ,int *pBufferSize , BSONObj *obj )
 {
@@ -25,8 +26,11 @@ int HandShakeMsgOpt::buildMessage (char **ppBuffer ,int *pBufferSize , BSONObj *
  
  if ( obj != NULL )
     size += obj->objsize () ;
+
+// cout <<"obj size"<< obj->objsize() << endl ;
+// cout << "size " << size << endl ;
  
-  *ppBuffer = (char*)malloc (sizeof(char)*size) ;
+  *ppBuffer = (char*)malloc ( sizeof(char)*size) ;
   
   if ( *ppBuffer == NULL )
   {
@@ -36,12 +40,14 @@ int HandShakeMsgOpt::buildMessage (char **ppBuffer ,int *pBufferSize , BSONObj *
   
   *pBufferSize = size  ;
 
-   pMessage = (hand_shake_msg_t*)*pBufferSize ;
+   pMessage = (hand_shake_msg_t*)*ppBuffer ;
   
    pMessage->header.type = HAND_SHAKE ;
    pMessage->header.len  = 0 ;
   
-   if ( obj != 0 )
+   
+
+   if ( obj != NULL )
    {
 	pMessage->header.len = obj->objsize() ;
    	
@@ -75,7 +81,10 @@ int HandShakeMsgOpt::parseMessage ( char *pBuffer , BSONObj &msgData )
     // now extract data from message
    
     msgData = BSONObj ( &pMessage->data[0]) ;
- 
+
+    hash_info = msgData["hash info"].toString () ;
+    peer_id   = msgData["peer_id"].toString () ;
+
     return 0 ;
 }
 
