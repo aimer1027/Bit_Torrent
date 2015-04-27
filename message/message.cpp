@@ -136,8 +136,118 @@ int KeepAliveMsgOpt::parseMessage ( char *pBuffer , bson::BSONObj &msgData )
    return 0 ;
 }
 
+int ChockInterestedMsgOpt::buildMessage ( char **ppBuffer , int *pBufferSize ,
+				BSONObj *obj )
+{
+   int size = 0 ;
+   chock_interested_msg_t *pMessage = NULL ;
+   
+   size += sizeof(chock_interested_msg_t) ;
+   
+   if ( obj != NULL )
+	size += obj->objsize () ;
 
+   *ppBuffer = (char*)malloc(size*sizeof(char)) ;
+   
+   if ( *ppBuffer == NULL )
+   {
+	perror ("failed to allocate space to ppBuffer") ;
+	return -1 ;
+   }   
+ 
+  *pBufferSize = size ;
+  pMessage = (chock_interested_msg_t*)*ppBuffer ;
+  
+  pMessage->header.type = CHOCK_INTERESTED ;
+  pMessage->header.len  = 0 ;
+  
+  if ( obj != NULL )
+  {
+	pMessage->header.len = obj->objsize () ;
+	memcpy (&pMessage->data[0] , obj->objdata()  , obj->objsize() ) ;
+  }
+ 
+  return 0 ;
+}
 
+int ChockInterestedMsgOpt::parseMessage ( char *pBuffer , BSONObj &msgData )
+{
+  chock_interested_msg_t *pMessage = NULL ;
 
+  if ( pBuffer == NULL )
+  {
+	perror ("message is empty") ;
+	return -1 ;
+  }
+  
+  pMessage = (chock_interested_msg_t*)pBuffer ;
+ 
+  if ( pMessage->header.type != CHOCK_INTERESTED )
+  {
+	perror ("message type not match with parse type, error") ;
+	return -1 ;
+  } 
+ 
+  msgData = BSONObj ( &pMessage->data[0]) ;
+  type = msgData["type"].number() ;
+  
+  return 0 ;
+} 
 
+int HaveMsgOpt::buildMessage ( char **ppBuffer , int *pBufferSize ,
+				       BSONObj *obj )
+{
+  int size = 0 ;
+   chock_interested_msg_t *pMessage = NULL ;
 
+   size += sizeof(chock_interested_msg_t) ;
+
+   if ( obj != NULL )
+        size += obj->objsize () ;
+
+   *ppBuffer = (char*)malloc(size*sizeof(char)) ;
+
+   if ( *ppBuffer == NULL )
+   {
+        perror ("failed to allocate space to ppBuffer") ;
+        return -1 ;
+   }
+
+  *pBufferSize = size ;
+  pMessage = (chock_interested_msg_t*)*ppBuffer ;
+
+  pMessage->header.type = HAVE ;
+  pMessage->header.len  = 0 ;
+
+  if ( obj != NULL )
+  {
+        pMessage->header.len = obj->objsize () ;
+        memcpy (&pMessage->data[0] , obj->objdata()  , obj->objsize() ) ;
+  }
+  
+  return 0 ;
+}
+
+int HaveMsgOpt::parseMessage ( char *pBuffer , BSONObj &msgData )
+{
+   have_msg_t *pMessage = NULL ;
+
+   if ( pBuffer == NULL )
+   {
+	perror ("message empty , failed to parse") ;
+	return -1 ;
+   }
+  
+  pMessage = (have_msg_t*)pBuffer ;
+  
+  if (pMessage->header.type != HAVE )
+  {
+	perror ("message type not match with parser type , failed") ;
+	return -1 ;
+  } 
+  
+  msgData = BSONObj(&pMessage->data[0]) ;
+  index = msgData["index"].number () ;
+  
+  return 0;
+}

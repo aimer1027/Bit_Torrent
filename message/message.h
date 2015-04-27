@@ -43,7 +43,7 @@ typedef struct have_msg
 {
    head_t header ;
    char   data[0] ;
-} ;
+}have_msg_t ;
 
 
 class HandShakeMsgOpt 
