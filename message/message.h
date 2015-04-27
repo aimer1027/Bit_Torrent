@@ -28,13 +28,14 @@ typedef struct hand_shake_msg
 typedef struct keep_alive_msg
 {
   head_t header ;
-} keep_alive_msg ;
+} keep_alive_msg_t ;
 
 class MessageOperator
 {
   public :
+	int getMessageType       ( char *pBuffer ) ;
 	virtual int buildMessage ( char **ppBuffer , bson::BSONObj *obj) = 0 ;
-	virtual int parseMessage ( char *pBuffer , bson::BSONObj &msgData) = 0
+	virtual int parseMessage ( char *pBuffer , bson::BSONObj &msgData) = 0 ;
 
 } ;
 
@@ -44,8 +45,8 @@ class HandShakeMsgOpt : MessageOperator
   private :
 	hand_shake_msg_t *pMessage ;
   public :
-	virtual int buildMessage ( char **ppBuffer , 
-				bson::BSONObj *obj ) ;
+	virtual int buildMessage ( char **ppBuffer ,int *pBufferSize ,
+							bson::BSONObj *obj ) ;
 	virtual int parseMessage ( char *pBuffer , 
 				bson::BSONObj &msgData ) ;
 } ;
@@ -57,7 +58,7 @@ class KeepAliveMsgOpt : MessageOperator
 	keep_alive_msg_t *pMessage ;
   
    public :
-	virtual int buildMessage ( char **ppBuffer ,
+	virtual int buildMessage ( char **ppBuffer , int *pBufferSize ,
 				bson::BSONObj *obj ) ;
 	virtual int parseMessage ( char *pBuffer ,
 				bson::BSONObj &msgData ) ;
