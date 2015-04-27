@@ -7,7 +7,9 @@ enum MESSAGE_TYPE
 {
   NONE = 0 ,
   HAND_SHAKE,
-  KEEP_ALIVE
+  KEEP_ALIVE,
+  CHOCK_INTERESTED,
+  HAVE
 } ;
 
 typedef struct msg_head
@@ -34,7 +36,7 @@ typedef struct keep_alive_msg
 
 class HandShakeMsgOpt 
 {
-  private :
+ public  :
 	hand_shake_msg_t *pMessage ;
 	string hash_info ;
 	string peer_id ;
@@ -44,9 +46,10 @@ class HandShakeMsgOpt
  int parseMessage ( char *pBuffer ,  bson::BSONObj &msgData ) ;
 
  ~HandShakeMsgOpt ()   {}
+
 } ;
 
-/*
+
 class KeepAliveMsgOpt 
 {
    private :
@@ -57,8 +60,44 @@ class KeepAliveMsgOpt
  int parseMessage ( char *pBuffer ,bson::BSONObj &msgData ) ;
 
  ~KeepAliveMsgOpt () {}
+
 } ;
-*/
+
+enum CHOCK_INTERESTED_TYPE
+{
+   CHOCKED = 0 ,
+   UNCHOCKED   ,
+   INTERESTED  ,
+   UNINTERESTED
+} ;
+
+class ChockInterestedMsgOpt
+{
+  public :
+	int type ;
+
+  public :
+	int buildMessage ( char **ppBuffer , int *pBufferSize , 
+					bson::BSONObj *obj ) ;
+	int parseMessage ( char *pBuffer , bson::BSONObj &msgData ) ;
+  	
+	~ChockInterestedMsgOpt () {}
+} ;
+
+class HaveMsgOpt
+{
+  public :
+	int index ;
+
+  public :
+	int buildMessage ( char **ppBuffer , int *pBufferSize ,
+					bson::BSONObj *obj ) ;
+	int parseMessage ( char *pBuffer , bson::BSONObj &msgData ) ;
+	
+	~HaveMsgOpt () {}
+} ;
+
+
 
 
 #endif // message
