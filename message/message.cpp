@@ -82,14 +82,59 @@ int HandShakeMsgOpt::parseMessage ( char *pBuffer , BSONObj &msgData )
    
     msgData = BSONObj ( &pMessage->data[0]) ;
 
-    hash_info = msgData["hash info"].toString () ;
+    hash_info = msgData["hash_info"].toString () ;
     peer_id   = msgData["peer_id"].toString () ;
 
     return 0 ;
 }
 
 
+int KeepAliveMsgOpt::buildMessage( char **ppBuffer , int *pBufferSize , 
+					bson::BSONObj *obj )
+{
+  int size = 0 ;
+  keep_alive_msg_t *pMessage = NULL ;  
 
+  size += sizeof(keep_alive_msg_t) ; 
+  
+  // keep alive message's data content is null 
+  
+  *ppBuffer = (char*)malloc(sizeof(char)*size) ;
+  
+   if ( *ppBuffer == NULL )
+   {
+	perror ("failed to allocate space for ppBuffer") ;
+	return -1 ;
+   } 
+  
+  pMessage = (keep_alive_msg_t*)*ppBuffer ;
+  pMessage->header.len  = 0 ; // data content size is 0
+  pMessage->header.type = KEEP_ALIVE ;
+   
+  return 0 ;
+}
+
+int KeepAliveMsgOpt::parseMessage ( char *pBuffer , bson::BSONObj &msgData )
+{
+   // is null or is type correct
+   keep_alive_msg_t *pMessage = NULL ;  
+
+   if ( pBuffer == NULL )
+   {
+	perror ("failed, message is empty") ;
+	return -1 ;
+   }
+   
+   pMessage = (keep_alive_msg_t*)pBuffer ;
+   
+   if ( pMessage->header.type != KEEP_ALIVE )
+   {
+	perror ("failed , message type not match with parser type") ;
+	return -1 ;
+   }
+
+   return 0 ;
+}
 
 
 
