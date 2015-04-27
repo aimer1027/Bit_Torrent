@@ -33,6 +33,18 @@ typedef struct keep_alive_msg
 } keep_alive_msg_t ;
 
 
+typedef struct chock_interested_msg
+{
+   head_t header ;
+   char   data[0] ;
+} chock_interested_msg_t ;
+
+typedef struct have_msg
+{
+   head_t header ;
+   char   data[0] ;
+} ;
+
 
 class HandShakeMsgOpt 
 {
@@ -75,6 +87,7 @@ class ChockInterestedMsgOpt
 {
   public :
 	int type ;
+        chock_interested_msg_t *pMessage ;
 
   public :
 	int buildMessage ( char **ppBuffer , int *pBufferSize , 
@@ -88,7 +101,7 @@ class HaveMsgOpt
 {
   public :
 	int index ;
-
+	have_msg_t *pMessage ;
   public :
 	int buildMessage ( char **ppBuffer , int *pBufferSize ,
 					bson::BSONObj *obj ) ;
