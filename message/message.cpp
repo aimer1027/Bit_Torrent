@@ -190,7 +190,8 @@ int ChockInterestedMsgOpt::parseMessage ( char *pBuffer , BSONObj &msgData )
  
   msgData = BSONObj ( &pMessage->data[0]) ;
   type = msgData["type"].number() ;
-  
+  cout << "type " << type << endl ; 
+ 
   return 0 ;
 } 
 
