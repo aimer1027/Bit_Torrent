@@ -129,7 +129,7 @@ cout << "have_msg_opt->index = " << have_msg_opt->index << endl ;
 
 cout << "------------ test bitfield message --------------------"<< endl ;
 
-Bitmap bitmap (1024) ;  // here we create a bit map with bit number = 1024
+Bitmap bitmap (32) ;  // here we create a bit map with bit number = 1024
 			// and all the bits in bit map initialized = 0
 
 BitFieldMsgOpt *bitfield_msg_opt = new BitFieldMsgOpt ();
@@ -139,7 +139,12 @@ char *pp_bitfield_buffer ;
 int   p_bitfield_buffer_size ;
 
 
-bitmap.set_bit_map_value ( 27 , 1 ) ;
+//bitmap.set_bit_map_value ( 7 , 1 ) ;
+
+//bitmap.set_bit_map_value (15, 1) ;
+
+bitmap.set_all (1) ;
+
 // we set the 27th bit's value in bitmap 1
 
 bitmap.print () ;  
@@ -162,8 +167,9 @@ cout << bitfield_obj.toString () << endl ;
 bitfield_msg_opt->buildMessage (&pp_bitfield_buffer , &p_bitfield_buffer_size ,
 			&bitfield_obj ) ; 
 
-cout << "total message length " << p_bitfield_buffer_size << endl ;
+//cout << "total message length " << p_bitfield_buffer_size << endl ;
 
+cout << "original bit field size " << bitmap.bit_field.size () << endl ;
 // parse message
 
 BSONObj bitfield_msg_data ;
@@ -179,7 +185,7 @@ cout <<"bit map bit length "<< bitfield_msg_opt->pBitmap->bit_length <<endl ;
 cout << "bit map byte length " << bitfield_msg_opt->pBitmap->byte_length << endl ;
 cout <<" bit map bits print " << endl ;
 cout << endl ;
- bitfield_msg_opt->pBitmap->print () ;
+bitfield_msg_opt->pBitmap->print () ;
 
   return 0 ;
 }

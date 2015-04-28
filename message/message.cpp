@@ -293,6 +293,7 @@ int BitFieldMsgOpt::parseMessage ( char *pBuffer , bson::BSONObj &msgData )
  // in this method create Bitmap object and pass in the message data content
  // message content check and message type check
    
+    vector<char> clist ;
     bitfield_msg_t *pMessage = NULL ;
 
     if ( pBuffer == NULL )
@@ -318,11 +319,18 @@ int BitFieldMsgOpt::parseMessage ( char *pBuffer , bson::BSONObj &msgData )
 
 	BSONObjIterator cIter (msgData["bit_field"].embeddedObjectUserCheck()) ;
 	
+	pBitmap->bit_field.clear () ;
+
 	while (cIter.more ())
 	{
-	  
-	     pBitmap->bit_field.push_back ((char)(cIter.next().number())) ;
+	     char c = (char)cIter.next().numberInt () ;
+	       
+	     pBitmap->bit_field.push_back (c) ;
+
 	}
+
+        cout << "bit field size " << pBitmap->bit_field.size()<< endl ;
+
     }
 
    return 0 ;
