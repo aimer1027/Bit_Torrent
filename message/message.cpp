@@ -314,7 +314,8 @@ int BitFieldMsgOpt::parseMessage ( char *pBuffer , bson::BSONObj &msgData )
     
     if ( msgData.objsize () != 0 )
     {
-	pBitmap = new Bitmap (msgData["bit_length"].number() ) ;
+	pBitmap = new Bitmap () ;
+        pBitmap->bit_length = msgData["bit_length"].number()  ;
 	pBitmap->byte_length = msgData["byte_length"].number() ;
 
 	BSONObjIterator cIter (msgData["bit_field"].embeddedObjectUserCheck()) ;
