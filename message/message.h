@@ -3,6 +3,8 @@
 
 #include <bson.h>
 
+#include <../bit_map/bit_map.h>
+
 enum MESSAGE_TYPE
 {
   NONE = 0 ,
@@ -44,6 +46,12 @@ typedef struct have_msg
    head_t header ;
    char   data[0] ;
 }have_msg_t ;
+
+typedef struct bitfield_msg
+{
+   head_t header ;
+   char   data[0] ;
+} bitfield_msg_t ;
 
 
 class HandShakeMsgOpt 
@@ -110,7 +118,21 @@ class HaveMsgOpt
 	~HaveMsgOpt () {}
 } ;
 
+// add new class , by Aimer 2015/4/28
 
+class BitFieldMsgOpt
+{
+  public :
+	Bitmap *pBitmap ;
+        bitfield_msg_t *pMessage ;
+  public :
+	int buildMessage ( char **ppBuffer , int *pBufferSize ,
+						bson::BSONObj *obj ) ;
+	int parseMessage ( char *pBuffer , bson::BSONObj &msgData  ) ;
+  
+        ~BitFieldMsgOpt () {}
+ 
+} ;
 
 
 #endif // message
