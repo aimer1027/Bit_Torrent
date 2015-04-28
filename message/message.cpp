@@ -4,6 +4,7 @@
 #include <bson.h>
 
 #include "message.h"
+#include "../bit_map/bit_map.h" // use class Bitmap 
 
 using namespace std ;
 using namespace bson ;
@@ -252,3 +253,80 @@ int HaveMsgOpt::parseMessage ( char *pBuffer , BSONObj &msgData )
   
   return 0;
 }
+
+int BitFieldMsgOpt::buildMessage ( char **ppBuffer , int *pBufferSize ,
+								BSONObj *obj )
+{
+   int size = 0 ;
+   bitfield_msg_t *pMessage = NULL ;
+   
+   size += sizeof (bitfield_msg_t) ;
+   
+   if ( obj != NULL )
+      size += obj->objsize () ;
+  
+   *ppBuffer = (char*)malloc(size*sizeof(char)) ;
+   
+    if ( *ppBuffer == NULL )
+    {
+	perror ("failed to allocate space to ppBuffer") ;
+	return -1 ;
+    }
+  
+    *pBufferSize = size ;
+    pMessage    = (bitfield_msg_t*)*ppBuffer ;
+   
+    pMessage->header.len = 0 ;
+    pMessage->header.type = BITFIELD;
+   
+    if ( obj != NULL )
+    {
+	memcpy ( &pMessage->data[0] , obj->objdata() , obj->objsize() ) ;
+	pMessage->header.len = obj->objsize () ;
+    }
+	
+    return 0 ;
+}
+
+int BitFieldMsgOpt::parseMessage ( char *pBuffer , bson::BSONObj &msgData )
+{
+ // in this method create Bitmap object and pass in the message data content
+ // message content check and message type check
+   
+    bitfield_msg_t *pMessage = NULL ;
+
+    if ( pBuffer == NULL )
+    {
+	perror ("invalid message, empty ") ;
+	return -1 ;
+    }
+   
+    pMessage = (bitfield_msg_t*)pBuffer ;
+    
+    if ( pMessage->header.type != BITFIELD )
+    {
+	perror ("message and parser type not match with each other") ;
+	return -1 ;
+    }	
+   
+    msgData = BSONObj( &pMessage->data[0]) ;
+    
+    if ( msgData.objsize () != 0 )
+    {
+	pBitmap = new Bitmap (msgData["bit_length"].number() ) ;
+	pBitmap->byte_length = msgData["byte_length"].number() ;
+
+	BSONObjIterator cIter (msgData["bit_field"].embeddedObjectUserCheck()) ;
+	
+	while (cIter.more ())
+	{
+	  
+	     pBitmap->bit_field.push_back ((char)cIter.next().number()) ;
+	}
+    }
+
+   return 0 ;
+}
+
+
+

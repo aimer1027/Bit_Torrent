@@ -11,7 +11,8 @@ enum MESSAGE_TYPE
   HAND_SHAKE,
   KEEP_ALIVE,
   CHOCK_INTERESTED,
-  HAVE
+  HAVE,
+  BITFIELD
 } ;
 
 typedef struct msg_head
