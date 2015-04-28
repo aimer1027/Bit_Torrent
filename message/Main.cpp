@@ -4,6 +4,8 @@
 #include <bson.h>
 
 #include "message.h"
+#include "../bit_map/bit_map.h" // Bitmap will use
+
 
 using namespace std ;
 using namespace bson ;
@@ -125,11 +127,59 @@ cout << "have message data content "<< have_msg_data.toString () << endl ;
 cout << "have_msg_opt->index = " << have_msg_opt->index << endl ;
 
 
+cout << "------------ test bitfield message --------------------"<< endl ;
+
+Bitmap bitmap (1024) ;  // here we create a bit map with bit number = 1024
+			// and all the bits in bit map initialized = 0
+
+BitFieldMsgOpt *bitfield_msg_opt = new BitFieldMsgOpt ();
+BSONObj bitfield_obj ;
+BSONObjBuilder bitfield_builder ;
+char *pp_bitfield_buffer ;
+int   p_bitfield_buffer_size ;
 
 
+bitmap.set_bit_map_value ( 27 , 1 ) ;
+// we set the 27th bit's value in bitmap 1
 
+bitmap.print () ;  
+// here we print all the bits value in the bitmap 
 
+//load info from bitmap into ---- > BSONObjBuilder 
+bitfield_builder.appendNumber("bit_length",bitmap.bit_length ) ;
+bitfield_builder.appendNumber("byte_length", bitmap.byte_length) ;
+bitfield_builder.append ("bit_field", bitmap.bit_field) ;
 
+bitfield_obj = bitfield_builder.obj () ;
+
+// print out the bitfield_obj 's content
+
+cout << "bitfield_obj content "<< endl ;
+cout << bitfield_obj.toString () << endl ;
+
+// build message
+
+bitfield_msg_opt->buildMessage (&pp_bitfield_buffer , &p_bitfield_buffer_size ,
+			&bitfield_obj ) ; 
+
+cout << "total message length " << p_bitfield_buffer_size << endl ;
+
+// parse message
+
+BSONObj bitfield_msg_data ;
+
+bitfield_msg_opt->parseMessage (pp_bitfield_buffer , bitfield_msg_data ) ;
+
+cout << "after parsing message , extracted message data "<< endl ;
+cout << bitfield_msg_data.toString() <<endl;
+
+cout << "here is the Bitmap * contents in BitFieldMsgOpt  " << endl ;
+
+cout <<"bit map bit length "<< bitfield_msg_opt->pBitmap->bit_length <<endl ;
+cout << "bit map byte length " << bitfield_msg_opt->pBitmap->byte_length << endl ;
+cout <<" bit map bits print " << endl ;
+cout << endl ;
+ bitfield_msg_opt->pBitmap->print () ;
 
   return 0 ;
 }

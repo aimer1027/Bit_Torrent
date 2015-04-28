@@ -321,7 +321,7 @@ int BitFieldMsgOpt::parseMessage ( char *pBuffer , bson::BSONObj &msgData )
 	while (cIter.more ())
 	{
 	  
-	     pBitmap->bit_field.push_back ((char)cIter.next().number()) ;
+	     pBitmap->bit_field.push_back ((char)(cIter.next().number())) ;
 	}
     }
 
